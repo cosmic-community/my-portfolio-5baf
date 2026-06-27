@@ -1,7 +1,16 @@
 // app/projects/[slug]/page.tsx
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getProjectBySlug, getMetafieldValue } from '@/lib/cosmic'
+import { getProjectBySlug, getProjects, getMetafieldValue } from '@/lib/cosmic'
+
+// Tell Next.js which slugs to pre-render at build time
+export async function generateStaticParams() {
+  const projects = await getProjects()
+  return projects.map((project) => ({ slug: project.slug }))
+}
+
+// Return 404 for any slug not in the list above
+export const dynamicParams = false
 
 export default async function ProjectDetailPage({
   params,
